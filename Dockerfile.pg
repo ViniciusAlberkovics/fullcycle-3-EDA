@@ -1,4 +1,0 @@
-FROM postgres
-WORKDIR /app
-COPY ./postgres_init.sh /docker-entrypoint-initdb.d
-COPY ./postgres_seed.sql ./scripts/db/dump.sql

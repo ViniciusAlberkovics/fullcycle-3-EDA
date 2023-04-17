@@ -5,7 +5,6 @@ services:
     build:
       context: ./fc-eda
       dockerfile: Dockerfile.prod
-    platform: linux/amd64
     container_name: goapp
     entrypoint: go run cmd/walletcore/main.go
     ports:
@@ -30,9 +29,7 @@ services:
       - control-center
 
   db-pg:
-    build: 
-      context: .
-      dockerfile: Dockerfile.pg
+    image: postgres
     container_name: db-pg
     restart: always
     tty: true
@@ -42,15 +39,16 @@ services:
       POSTGRES_USER: localuser
       POSTGRES_PASSWORD: anyPassword1
       POSTGRES_DB: BALANCES
+    volumes:
+      - ./postgres_init.sh:/docker-entrypoint-initdb.d/init.sh
+      - ./postgres_seed.sql:/app/scripts/db/dump.sql
 
   mysql:
     image: mysql:5.7
-    platform: linux/amd64
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: wallet
-      MYSQL_PASSWORD: root
     ports:
       - 3306:3306
     volumes:
